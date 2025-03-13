@@ -1,22 +1,12 @@
 import streamlit as st
 
-# page set up
-st.set_page_config(page_title='EGT Hot Day Margin Prediction', layout='wide', page_icon=":material/flight_takeoff:")
+# Set page config (move this if necessary)
+st.set_page_config(page_title="Login", page_icon="🔐")
 
-import pandas as pd
-import numpy as np
-import tensorflow as tf
-from tensorflow.keras.models import load_model
-
-
-# Authentication Setup
-USER_CREDENTIALS = {"admin": "password", "user": "password"}  #Can be replaced
-
-# Session State for Authentication
+# Authentication Check
 if "authenticated" not in st.session_state:
     st.session_state.authenticated = False
 
-# Login Form that blocks access until login
 if not st.session_state.authenticated:
     st.subheader("🔐 Login to Access the App")
 
@@ -24,31 +14,20 @@ if not st.session_state.authenticated:
     password = st.text_input("Password", type="password")
 
     if st.button("Login"):
-        if username in USER_CREDENTIALS and USER_CREDENTIALS[username] == password:
+        if username == "admin" and password == "password":  # Replace with real auth logic
             st.session_state.authenticated = True
             st.success("✅ Login Successful! Redirecting...")
-            st.rerun()
+            st.rerun()  # Refresh the app to reload the authenticated state
         else:
             st.error("❌ Invalid Username or Password")
-    
-    st.stop()  # 🚫 Stops execution until logged in
 
-# Logout Button
-if st.sidebar.button("🔒 Logout"):
-    st.session_state.authenticated = False
-    st.rerun()
+    st.stop()  # Prevent further execution
 
-# Define navigation after set_page_config()
-model_page       = st.Page("Apps/models.py",     title='Models Info', icon='📊')
-prediction_page  = st.Page("Apps/prediction.py", title='Make Predictions', icon='🎯')
-#inter_Page       = st.Page("Apps/Intrepreat.py", title='Explainable AI', icon='🧠')
+# If authenticated, load the overview page
+#st.switch_page("pages/1_overview.py")
 
-pg = st.navigation(
-    {
-        "Navigation Bar": [model_page, prediction_page]
-    }
-)
-
-pg.run()
-
-
+with st.sidebar:
+    st.markdown("---")  # Add a separator
+    if st.button("🔒 Logout", use_container_width=True):
+        st.session_state.authenticated = False
+        st.rerun()  # Refresh the app to go back to login
