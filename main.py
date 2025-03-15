@@ -14,7 +14,7 @@ if not st.session_state.authenticated:
     password = st.text_input("Password", type="password")
 
     if st.button("Login"):
-        if username == "admin" and password == "password":  # Replace with real auth logic
+        if username == "Cmainga" and password == "password123":  # Replace with real auth logic
             st.session_state.authenticated = True
             st.success("✅ Login Successful! Redirecting...")
             st.rerun()  # Refresh the app to reload the authenticated state
