@@ -157,3 +157,12 @@ else:
                     st.error("❌ Failed to send email.")
         else:
             st.write("✅ Prediction is within safe limits. No alert needed.")
+
+
+
+# Logout button in the sidebar
+with st.sidebar:
+    st.markdown("---")  # Separator
+    if st.button("🔒 Logout", use_container_width=True):
+        st.session_state.authenticated = False
+        st.rerun()  # Refresh to return to the login page

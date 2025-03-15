@@ -23,11 +23,14 @@ if not st.session_state.authenticated:
 
     st.stop()  # Prevent further execution
 
+st.switch_page("pages/1_overview.py")
+
 # If authenticated, load the overview page
 #st.switch_page("pages/1_overview.py")
 
-with st.sidebar:
-    st.markdown("---")  # Add a separator
-    if st.button("🔒 Logout", use_container_width=True):
-        st.session_state.authenticated = False
-        st.rerun()  # Refresh the app to go back to login
+#with st.sidebar:
+    #st.markdown("---")  # Add a separator
+    #if st.button("🔒 Logout", use_container_width=True):
+        #st.session_state.authenticated = False
+        #
+        # st.rerun()  # Refresh the app to go back to login
