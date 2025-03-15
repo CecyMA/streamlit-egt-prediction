@@ -126,13 +126,14 @@ else:
 
         scaled_data = min_max_scaling(input_data)
         prediction = inverse_min_max_scaling(predict_egt(scaled_data))
-        st.write(f'🎯 EGT Hot Day Margin prediction: {prediction[0]:.2f}°C')
+        st.write(f'🎯 EGT Hot Day Margin prediction: {float(prediction[0]):.2f}°C')
 
-        if prediction[0] < threshold_min or prediction[0] > threshold_max:
+
+        if float(prediction[0]) < threshold_min or float(prediction[0]) > threshold_max:
             st.write("⚠️ Alert: Prediction exceeds safe limits!")
             recipient_email = st.text_input("Enter recipient email for alerts", "")
             if recipient_email and st.button("📧 Send Email Alert"):
-                email_sent = send_email_alert(engine_id, prediction[0], threshold_min, threshold_max, recipient_email)
+                email_sent = send_email_alert(engine_id, float(prediction[0]), threshold_min, threshold_max, recipient_email)
                 if email_sent:
                     st.success("✅ Email sent!")
                 else:
