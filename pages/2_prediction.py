@@ -72,6 +72,12 @@ if prediction_type == "File Upload":
                             st.error(f"❌ Failed to send email.")
 
 else:
+    # Initialize session state variables if not set
+    if "prediction" not in st.session_state:
+        st.session_state.prediction = None
+    if "recipient_email" not in st.session_state:
+        st.session_state.recipient_email = ""
+
     with st.form(key='manual_input_form'):
         col1, col2, col3, col4 = st.columns(4)
         with col1:
@@ -102,7 +108,7 @@ else:
             fan_speed = st.number_input("Indicated Fan Speed", value=0.00)
         with col12:
             thrust_derate = st.number_input("Thrust Derate", value=0.00)
-        
+
         col13, col14, col15, col16 = st.columns(4)
         with col13:
             thrust_derate_smooth = st.number_input("Thrust Derate Smoothed", value=0.00)
@@ -116,6 +122,7 @@ else:
         submitted = st.form_submit_button(label='Predict')
 
     if submitted:
+        # Prepare input data
         input_data = pd.DataFrame([[
             mach, fuel_flow, vib_n1, vib_n2, oil_temp, egt, total_air_temp, oil_pressure,
             oil_pressure_smooth, altitude, fan_speed, thrust_derate, thrust_derate_smooth, core_speed, oil_temp_smooth, days_since_install
@@ -124,16 +131,26 @@ else:
         st.write("📝 Input Data:")
         st.write(input_data)
 
+        # Perform prediction
         scaled_data = min_max_scaling(input_data)
-        prediction = inverse_min_max_scaling(predict_egt(scaled_data))
-        st.write(f'🎯 EGT Hot Day Margin prediction: {float(prediction[0]):.2f}°C')
+        st.session_state.prediction = inverse_min_max_scaling(predict_egt(scaled_data))
 
+    # Retain prediction and show result after rerun
+    if st.session_state.prediction is not None:
+        prediction_value = float(st.session_state.prediction[0])
+        st.write(f'🎯 EGT Hot Day Margin prediction: {prediction_value:.2f}°C')
 
-        if float(prediction[0]) < threshold_min or float(prediction[0]) > threshold_max:
+        if prediction_value < threshold_min or prediction_value > threshold_max:
             st.write("⚠️ Alert: Prediction exceeds safe limits!")
-            recipient_email = st.text_input("Enter recipient email for alerts", "")
-            if recipient_email and st.button("📧 Send Email Alert"):
-                email_sent = send_email_alert(engine_id, float(prediction[0]), threshold_min, threshold_max, recipient_email)
+
+            # Persist email input using session state
+            st.session_state.recipient_email = st.text_input(
+                "Enter recipient email for alerts", 
+                value=st.session_state.recipient_email
+            )
+
+            if st.session_state.recipient_email and st.button("📧 Send Email Alert"):
+                email_sent = send_email_alert(engine_id, prediction_value, threshold_min, threshold_max, st.session_state.recipient_email)
                 if email_sent:
                     st.success("✅ Email sent!")
                 else:
