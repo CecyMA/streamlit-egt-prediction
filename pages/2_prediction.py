@@ -102,14 +102,24 @@ else:
             fan_speed = st.number_input("Indicated Fan Speed", value=0.00)
         with col12:
             thrust_derate = st.number_input("Thrust Derate", value=0.00)
+        
+        col13, col14, col15, col16 = st.columns(4)
+        with col13:
+            thrust_derate_smooth = st.number_input("Thrust Derate Smoothed", value=0.00)
+        with col14:
+            core_speed = st.number_input("Core Speed", value=0.00)
+        with col15:
+            oil_temp_smooth = st.number_input("Oil Temperature Smoothed", value=0.00)
+        with col16:
+            days_since_install = st.number_input("DAYS_SINCE_INSTALL", value=0)
 
         submitted = st.form_submit_button(label='Predict')
 
     if submitted:
         input_data = pd.DataFrame([[
             mach, fuel_flow, vib_n1, vib_n2, oil_temp, egt, total_air_temp, oil_pressure,
-            oil_pressure_smooth, altitude, fan_speed, thrust_derate,
-        ]], columns=input_features[:12])
+            oil_pressure_smooth, altitude, fan_speed, thrust_derate, thrust_derate_smooth, core_speed, oil_temp_smooth, days_since_install
+        ]], columns=input_features)
 
         st.write("📝 Input Data:")
         st.write(input_data)
