@@ -18,7 +18,7 @@ st.title("🎯 Predictions")
 st.write("Make predictions using the EGT Hot Day Margin model")
 
 # Page Content
-st.header("✈️ EGT Hot Day Margin Predictions")
+#st.header("✈️ EGT Hot Day Margin Predictions")
 
 prediction_type = st.radio("Select Prediction Type:", ["File Upload", "Manual Input"])
 
