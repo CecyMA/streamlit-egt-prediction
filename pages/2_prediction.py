@@ -92,24 +92,24 @@ else:
                 input_data["Mach"] = st.number_input("Mach", value=None, step=0.01, format="%.2f")
                 input_data["Oil Temperature"] = st.number_input("Oil Temperature", value=None, step=0.01, format="%.2f")
                 input_data["Oil Pressure Smoothed"] = st.number_input("Oil Pressure Smoothed", value=None, step=0.01, format="%.2f")
-                input_data["Thrust Derate Smoothed"] = st.number_input("Thrust Derate Smoothed", value=None, step=0.01, format="%.2f")
+                input_data["Altitude"] = st.number_input("Altitude", value=None, step=1, format="%d")
 
             with col2:
                 input_data["Fuel Flow"] = st.number_input("Fuel Flow", value=None, step=0.01, format="%.2f")
-                input_data["Altitude"] = st.number_input("Altitude", value=None, step=1, format="%d")
+                input_data["Total Air Temperature"] = st.number_input("Total Air Temperature", value=None, step=0.01, format="%.2f")
                 input_data["Core Speed"] = st.number_input("Core Speed", value=None, step=0.01, format="%.2f")
                 input_data["Oil Temperature Smoothed"] = st.number_input("Oil Temperature Smoothed", value=None, step=0.01, format="%.2f")
 
             with col3:
-                input_data["EGT"] = st.number_input("EGT", value=None, step=0.01, format="%.2f")
-                input_data["Total Air Temperature"] = st.number_input("Total Air Temperature", value=None, step=0.01, format="%.2f")
-                input_data["Oil Pressure"] = st.number_input("Oil Pressure", value=None, step=0.01, format="%.2f")
-                input_data["Indicated Fan Speed"] = st.number_input("Indicated Fan Speed", value=None, step=0.01, format="%.2f")
-
-            with col4:
-                input_data["Thrust Derate"] = st.number_input("Thrust Derate", value=None, step=0.01, format="%.2f")
                 input_data["Vibration N1 #1 Bearing"] = st.number_input("Vibration N1 #1 Bearing", value=None, step=0.01, format="%.2f")
                 input_data["Vibration N2 #1 Bearing"] = st.number_input("Vibration N2 #1 Bearing", value=None, step=0.01, format="%.2f")
+                input_data["EGT"] = st.number_input("EGT", value=None, step=0.01, format="%.2f")
+                input_data["Oil Pressure"] = st.number_input("Oil Pressure", value=None, step=0.01, format="%.2f")
+
+            with col4:
+                input_data["Indicated Fan Speed"] = st.number_input("Indicated Fan Speed", value=None, step=0.01, format="%.2f")
+                input_data["Thrust Derate"] = st.number_input("Thrust Derate", value=None, step=0.01, format="%.2f")
+                input_data["Thrust Derate Smoothed"] = st.number_input("Thrust Derate Smoothed", value=None, step=0.01, format="%.2f")
                 input_data["DAYS_SINCE_INSTALL"] = st.number_input("DAYS_SINCE_INSTALL", value=None, step=1, format="%d")
 
         submitted = st.form_submit_button("Predict")
