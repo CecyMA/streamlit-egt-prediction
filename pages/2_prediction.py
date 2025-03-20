@@ -82,54 +82,65 @@ else:
         st.session_state.recipient_email = ""
     
     # Prediction Form
-    with st.form("prediction_form", clear_on_submit=False):
-        input_data = {}
+    with st.form(key='manual_input_form'):
+        col1, col2, col3, col4 = st.columns(4)
+        with col1:
+            mach = st.number_input("Mach", value=0.00)
+        with col2:
+            fuel_flow = st.number_input("Fuel Flow", value=0.00)
+        with col3:
+            vib_n1 = st.number_input("Vibration N1 #1 Bearing", value=0.00)
+        with col4:
+            vib_n2 = st.number_input("Vibration N2 #1 Bearing", value=0.00)
+        
+        col5, col6, col7, col8 = st.columns(4)
+        with col5:
+            oil_temp = st.number_input("Oil Temperature", value=0.00)
+        with col6:
+            egt = st.number_input("EGT", value=0.00)
+        with col7:
+            total_air_temp = st.number_input("Total Air Temperature", value=0.00)
+        with col8:
+            oil_pressure = st.number_input("Oil Pressure", value=0.00)
+        
+        col9, col10, col11, col12 = st.columns(4)
+        with col9:
+            oil_pressure_smooth = st.number_input("Oil Pressure Smoothed", value=0.00)
+        with col10:
+            altitude = st.number_input("Altitude", value=0)
+        with col11:
+            fan_speed = st.number_input("Indicated Fan Speed", value=0.00)
+        with col12:
+            thrust_derate = st.number_input("Thrust Derate", value=0.00)
+        
+        col13, col14, col15, col16 = st.columns(4)
+        with col13:
+            thrust_derate_smooth = st.number_input("Thrust Derate Smoothed", value=0.00)
+        with col14:
+            core_speed = st.number_input("Core Speed", value=0.00)
+        with col15:
+            oil_temp_smooth = st.number_input("Oil Temperature Smoothed", value=0.00)
+        with col16:
+            days_since_install = st.number_input("Days Since Install", value=0)
+        
+        submitted = st.form_submit_button(label='Predict')
 
-        with st.container():
-            col1, col2, col3, col4 = st.columns(4)
-
-            with col1:
-                input_data["Mach"] = st.number_input("Mach", value=None, step=0.01, format="%.2f")
-                input_data["Oil Temperature"] = st.number_input("Oil Temperature", value=None, step=0.01, format="%.2f")
-                input_data["Oil Pressure Smoothed"] = st.number_input("Oil Pressure Smoothed", value=None, step=0.01, format="%.2f")
-                input_data["Altitude"] = st.number_input("Altitude", value=None, step=1, format="%d")
-
-            with col2:
-                input_data["Fuel Flow"] = st.number_input("Fuel Flow", value=None, step=0.01, format="%.2f")
-                input_data["Total Air Temperature"] = st.number_input("Total Air Temperature", value=None, step=0.01, format="%.2f")
-                input_data["Core Speed"] = st.number_input("Core Speed", value=None, step=0.01, format="%.2f")
-                input_data["Oil Temperature Smoothed"] = st.number_input("Oil Temperature Smoothed", value=None, step=0.01, format="%.2f")
-
-            with col3:
-                input_data["Vibration N1 #1 Bearing"] = st.number_input("Vibration N1 #1 Bearing", value=None, step=0.01, format="%.2f")
-                input_data["Vibration N2 #1 Bearing"] = st.number_input("Vibration N2 #1 Bearing", value=None, step=0.01, format="%.2f")
-                input_data["EGT"] = st.number_input("EGT", value=None, step=0.01, format="%.2f")
-                input_data["Oil Pressure"] = st.number_input("Oil Pressure", value=None, step=0.01, format="%.2f")
-
-            with col4:
-                input_data["Indicated Fan Speed"] = st.number_input("Indicated Fan Speed", value=None, step=0.01, format="%.2f")
-                input_data["Thrust Derate"] = st.number_input("Thrust Derate", value=None, step=0.01, format="%.2f")
-                input_data["Thrust Derate Smoothed"] = st.number_input("Thrust Derate Smoothed", value=None, step=0.01, format="%.2f")
-                input_data["DAYS_SINCE_INSTALL"] = st.number_input("DAYS_SINCE_INSTALL", value=None, step=1, format="%d")
-
-        submitted = st.form_submit_button("Predict")
-
-    # Handle prediction outside form
     if submitted:
-        input_df = pd.DataFrame([input_data])
-        st.write("📝 Input Data:")
-        st.write(input_df)
-
+        input_data = pd.DataFrame([[
+            mach, fuel_flow, vib_n1, vib_n2, oil_temp, egt, total_air_temp, oil_pressure, 
+            oil_pressure_smooth, altitude, fan_speed, thrust_derate, thrust_derate_smooth, 
+            core_speed, oil_temp_smooth, days_since_install
+        ]], columns=input_features)
+        
         st.session_state.input_data = input_data
-
-
-        scaled_data = min_max_scaling(input_df)
+        
+        scaled_data = min_max_scaling(input_data)
         st.session_state.prediction = inverse_min_max_scaling(predict_egt(scaled_data))
 
     # Display Prediction
     if st.session_state.prediction is not None:
         prediction_value = float(st.session_state.prediction[0])
-        st.write(f'🎯 EGT Hot Day Margin prediction: {prediction_value:.2f}°C')
+        st.write(f'EGT Hot Day Margin prediction: {prediction_value:.2f}°C')
 
         # Store alert status in session state
         st.session_state.alert_needed = prediction_value < threshold_min or prediction_value > threshold_max
