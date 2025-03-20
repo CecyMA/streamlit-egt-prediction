@@ -1,6 +1,5 @@
-import streamlit as st
-
 # Set page config (move this if necessary)
+import streamlit as st
 st.set_page_config(page_title="Login", page_icon="🔐")
 
 # Authentication Check
@@ -14,7 +13,7 @@ if not st.session_state.authenticated:
     password = st.text_input("Password", type="password")
 
     if st.button("Login"):
-        if username == "Cmainga" and password == "password123":  # Replace with real auth logic
+        if username == "Cmainga" and password == "password123":
             st.session_state.authenticated = True
             st.success("✅ Login Successful! Redirecting...")
             st.rerun()  # Refresh the app to reload the authenticated state
