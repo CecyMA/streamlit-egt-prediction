@@ -15,7 +15,7 @@ if "authenticated" not in st.session_state or not st.session_state.authenticated
 
 # Main Content for Predictions Page
 st.title("🎯 Predictions")
-st.write("Make predictions using the EGT Hot Day Margin model")
+#st.write("Make predictions using the EGT Hot Day Margin model")
 
 prediction_type = st.radio("Select Prediction Type:", ["File Upload", "Manual Input"])
 threshold_min = st.number_input("Enter Minimum Threshold for EGT Hot Day Margin", value=10)
