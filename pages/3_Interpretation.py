@@ -30,13 +30,13 @@ if "input_data" not in st.session_state or "prediction" not in st.session_state:
     st.warning("No prediction data found. Please make predictions first.")
 else:
     prediction_value = float(st.session_state.prediction[0])
-    st.write(f"🎯 **EGT Hot Day Margin Prediction:** {prediction_value:.2f}°C")
+    st.write(f"EGT Hot Day Margin Prediction: {prediction_value:.2f}°C")
 
     # Convert input_data into a DataFrame
     input_df = st.session_state.input_data
 
     # Display input data
-    st.write("📝 **Input Data Used for Prediction:**")
+    st.write("📝 Input Data Used for Prediction:")
     st.dataframe(input_df)
 
     # Ensure X_train is in NumPy format for SHAP
@@ -67,7 +67,7 @@ else:
     )
 
     # Generate SHAP Waterfall Plot
-    st.subheader("🔍 **SHAP Waterfall Plot for Feature Contributions**")
+    st.subheader("SHAP Waterfall Plot for Feature Contributions")
     fig, ax = plt.subplots(figsize=(8, 6))
     shap.plots.waterfall(explanation, show=False)
     plt.title("SHAP Waterfall Plot for Model Explanation")
@@ -79,4 +79,4 @@ else:
 if st.sidebar.button("🔒 Log Out"):
     st.session_state.clear()  # Clears all session data (logs out the user)
     st.success("Logged out successfully! Redirecting to login page...")
-    st.experimental_rerun()  # Refresh the page
+    st.rerun()  # Refresh the page
