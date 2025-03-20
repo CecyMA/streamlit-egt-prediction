@@ -33,7 +33,7 @@ else:
     st.write(f"🎯 **EGT Hot Day Margin Prediction:** {prediction_value:.2f}°C")
 
     # Convert input_data into a DataFrame
-    input_df = pd.DataFrame([st.session_state.input_data])
+    input_df = st.session_state.input_data
 
     # Display input data
     st.write("📝 **Input Data Used for Prediction:**")
