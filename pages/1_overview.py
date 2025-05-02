@@ -52,3 +52,4 @@ st.write("Email alerts can be sent to notify maintenance teams of critical predi
 
 
 st.success("🚀 This tool helps maintenance teams, engineers, and operators monitor engine performance efficiently and proactively.")
+
