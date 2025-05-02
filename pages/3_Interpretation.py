@@ -27,6 +27,7 @@ def load_model():
 # Ensure input data and prediction exist
 if "input_data" not in st.session_state or "prediction" not in st.session_state:
     st.warning("No prediction data found. Please make predictions first.")
+    st.stop()  # Prevents the rest of the code from executing if no data is present
 else:
     prediction_value = float(st.session_state.prediction[0])  # Prediction from the model
     st.write(f"EGT Hot Day Margin Prediction: {prediction_value:.2f}°C")
@@ -38,46 +39,44 @@ else:
     st.write("📝 Input Data Used for Prediction:")
     st.dataframe(input_df)
 
-input_df_scaled = min_max_scaling(input_df)
-# Load the model
-model_deep = load_model()
+    # Scale the input data
+    input_df_scaled = min_max_scaling(input_df)
 
-# SHAP setup
-X_train_array = X_train.to_numpy()
-X_test_array = input_df_scaled.to_numpy()
+    # Load the model
+    model_deep = load_model()
 
-# Initialize SHAP Deep Explainer
-explainer = shap.DeepExplainer(model_deep, X_train_array)
+    # SHAP setup
+    X_train_array = X_train.to_numpy()
+    X_test_array = input_df_scaled.to_numpy()
 
-#SHAP values
-shap_values_dl = explainer.shap_values(X_test_array)
-shap_values_dl = shap_values_dl[0].flatten() # Select relevant SHAP values
+    # Initialize SHAP Deep Explainer
+    explainer = shap.DeepExplainer(model_deep, X_train_array)
 
+    # SHAP values
+    shap_values_dl = explainer.shap_values(X_test_array)
+    shap_values_dl = shap_values_dl[0].flatten()  # Select relevant SHAP values
 
-# TensorFlow tensor to a float
-base_value_dl = explainer.expected_value.numpy().item()
-# Unscale the base value (f(x)) for the SHAP plot
-#unscaled_base_value_dl = inverse_min_max_scaling(base_value_dl)
+    # TensorFlow tensor to a float
+    base_value_dl = explainer.expected_value.numpy().item()
 
-# SHAP Explanation object
-explanation = shap.Explanation(
-        values=shap_values_dl,  
-        base_values= base_value_dl,
-        data=input_df.iloc[0],  
-        feature_names=input_df.columns  
+    # SHAP Explanation object
+    explanation = shap.Explanation(
+        values=shap_values_dl,
+        base_values=base_value_dl,
+        data=input_df.iloc[0],
+        feature_names=input_df.columns
     )
 
-
-
-# SHAP Waterfall Plot
-st.subheader("SHAP Waterfall Plot for Feature Contributions")
-fig, ax = plt.subplots(figsize=(8, 6))
-shap.plots.waterfall(explanation)
-plt.title("SHAP Waterfall Plot for Model Explanation")
-st.pyplot(fig)
+    # SHAP Waterfall Plot
+    st.subheader("SHAP Waterfall Plot for Feature Contributions")
+    fig, ax = plt.subplots(figsize=(8, 6))
+    shap.plots.waterfall(explanation)
+    plt.title("SHAP Waterfall Plot for Model Explanation")
+    st.pyplot(fig)
 
 # Sidebar Logout Button
 if st.sidebar.button("🔒 Log Out"):
     st.session_state.clear()  # Clears all session data (logs out the user)
     st.success("Logged out successfully! Redirecting to login page...")
     st.rerun()  # Refresh the page
+    st.stop()
