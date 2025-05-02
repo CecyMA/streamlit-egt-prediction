@@ -3,6 +3,7 @@ import streamlit as st
 st.set_page_config(page_title="Login", page_icon="🔐")
 
 # Authentication Check
+# Auntentication check
 if "authenticated" not in st.session_state:
     st.session_state.authenticated = False
 
@@ -16,7 +17,7 @@ if not st.session_state.authenticated:
         if username == "Cmainga" and password == "password123":
             st.session_state.authenticated = True
             st.success("✅ Login Successful! Redirecting...")
-            st.rerun()  # Refresh the app to reload the authenticated state
+            st.rerun()  # Refresh the app to reload the authenticated state 
         else:
             st.error("❌ Invalid Username or Password")
 
